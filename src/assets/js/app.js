@@ -1,3 +1,11 @@
+/**
+ * init foundation
+ */
+ $(document).ready(function () {
+  $(document).foundation();
+});
+
+
 console.log("Bijour Bank !");
 //vidage du localstorage
 localStorage.clear();
@@ -15,7 +23,7 @@ operationForm.addEventListener("submit", (event) => {
   function GetRow(titre, montant, description, operator) {
     let percent = (montant / solde) * 100;
     percent = percent.toFixed(2);
-    let credit = `<div class="operation credit" id="creditation">
+    let credit = `<div class="credit" id="creditation">
             <div class="grid-x grid-padding-x align-middle">
               <div class="cell shrink">
                 <div class="picto">
@@ -39,7 +47,7 @@ operationForm.addEventListener("submit", (event) => {
         
     `;
 
-    let debit = `<div class="operation debit" id="debitation">
+    let debit = `<div class="debit" id="debitation">
     <div class="grid-x grid-padding-x align-middle">
       <div class="cell shrink">
         <div class="picto">
@@ -73,7 +81,7 @@ operationForm.addEventListener("submit", (event) => {
   const dataInsert = {};
 
   formData.forEach((value, key) => {
-    console.log(value, key);
+    // console.log(value, key);
     dataInsert[key] = value;
   });
 
@@ -85,6 +93,8 @@ operationForm.addEventListener("submit", (event) => {
   let titre = dataInsert.titre;
   let desc = dataInsert.desc;
   let montant = dataInsert.montant;
+
+  
 
   //calcule le nouveau solde
   if (operator == "debit") {
@@ -137,39 +147,59 @@ operationForm.addEventListener("submit", (event) => {
         ))
     );
     
-    //insertion du html 
+  //insertion du html 
   document.getElementById("grid").innerHTML = rows;
-  
+
+  //injection du montant dans le graph 
+  addTemperature(titre, solde);
+ 
+
 });
 
-//recuperation des boutons debit credit
-const all = document.getElementById("all");
-const cred = document.getElementById("cred");
-const deb = document.getElementById("deb");
+ //recuperation des boutons debit credit
+ const all = document.getElementById("all");
+ const cred = document.getElementById("cred");
+ const deb = document.getElementById("deb");
 
-//ajout de l'evenement clic pour changer l'affichage
-cred.addEventListener("click",(e) =>{
+ const allDeb = document.getElementsByClassName("debit");
+ const allCred =  document.getElementsByClassName("credit");
+ 
+ //ajout de l'evenement clic pour changer l'affichage
+ cred.addEventListener("click",(e) =>{
+   
+    for (const [key, value] of Object.entries(allDeb)) {
+      
+      value.style.display = "none";
+    }
+    for (const [key, value] of Object.entries(allCred)) {
+      
+      value.style.display = "block";
+    }
+ 
+ })
+ 
+ deb.addEventListener("click", (e) => {
 
-  document.getElementById("debitation").style.display = "none";
-  document.getElementById("creditation").style.display = "block";
+  for (const [key, value] of Object.entries(allDeb)) {
+      
+    value.style.display = "block";
+  }
+  for (const [key, value] of Object.entries(allCred)) {
+    
+    value.style.display = "none";
+  }
+ 
+ })
+ 
+ all.addEventListener("click", (e) => {
 
-})
-
-deb.addEventListener("click", (e) => {
-
-  document.getElementById("creditation").style.display = "none";
-  document.getElementById("debitation").style.display = "block";
-})
-
-all.addEventListener("click", (e) => {
-
-  document.getElementById("creditation").style.display = "block";
-  document.getElementById("debitation").style.display = "block";
-})
-
-/**
- * init foundation
- */
-$(document).ready(function () {
-  $(document).foundation();
-});
+  for (const [key, value] of Object.entries(allDeb)) {
+      
+    value.style.display = "block";
+  }
+  for (const [key, value] of Object.entries(allCred)) {
+    
+    value.style.display = "block";
+  }
+ 
+ })
